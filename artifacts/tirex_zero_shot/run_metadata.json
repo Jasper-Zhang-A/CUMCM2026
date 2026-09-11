@@ -1,0 +1,40 @@
+{
+  "created_at_utc": "2026-09-11T20:32:21.834466+00:00",
+  "mode": "TiRex zero-shot inference",
+  "training_steps": 0,
+  "finetuning_steps": 0,
+  "input": "Data/data_clean.csv",
+  "checkpoint": "HuggingFace/model.ckpt",
+  "parameters": {
+    "device": "cuda:1",
+    "batch_size": 256,
+    "context_length": 2048,
+    "prediction_length": 144,
+    "issue_minutes": [
+      0,
+      360,
+      720,
+      1080
+    ],
+    "quantile_postprocess": "nonnegative_projection_then_monotonic_rearrangement"
+  },
+  "semantics": {
+    "tirex_baseline": "historical_only",
+    "q3_official_baseline": "Attachment3",
+    "rolling_execution_path": "latest forecast supplies next 6 hours",
+    "load_revision_assumption": "online_actual_load_available_through_issue_time",
+    "price_prediction_role": "decision_price_forecast",
+    "price_actual_role": "realized_settlement_price"
+  },
+  "software": {
+    "python": "3.13.9",
+    "torch": "2.9.1+cu128",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1"
+  },
+  "output": {
+    "forecast_rows": 577152,
+    "evaluated_rows": 576504,
+    "latest_path_rows_per_ten_minute_target": 48096
+  }
+}
