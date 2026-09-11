@@ -1,9 +1,0 @@
-{
-  "status": "passed",
-  "preserved_baseline_files": 31,
-  "seed2026_prediction_rows": 96192,
-  "low_data_prediction_rows": 35712,
-  "metrics_recomputed_independently": true,
-  "seed_trigger_verified": true,
-  "fixed_recent_day_baselines_budget_invariant": true
-}

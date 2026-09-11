@@ -1,7 +1,0 @@
-series,seq_len,validation_mae_kw,best_epoch,epochs_executed,train_points,validation_points,window_count,checkpoint
-Load,144,689.6668453790638,50,50,3456,1008,3169,artifacts\dlinear\checkpoints\selection_Load_L144.pt
-Load,432,671.9859095880738,50,50,3456,1008,2881,artifacts\dlinear\checkpoints\selection_Load_L432.pt
-Load,1008,146.73977463508024,49,50,3456,1008,2305,artifacts\dlinear\checkpoints\selection_Load_L1008.pt
-PV,144,213.28844703069478,50,50,3456,1008,3169,artifacts\dlinear\checkpoints\selection_PV_L144.pt
-PV,432,162.78731363250176,46,50,3456,1008,2881,artifacts\dlinear\checkpoints\selection_PV_L432.pt
-PV,1008,164.84204123204572,7,15,3456,1008,2305,artifacts\dlinear\checkpoints\selection_PV_L1008.pt
