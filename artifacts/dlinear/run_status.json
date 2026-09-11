@@ -1,0 +1,11 @@
+{
+  "status": "complete",
+  "stage": "DLinear only",
+  "seconds": 809.5308168000047,
+  "models_not_run": [
+    "PatchTST",
+    "TimesNet",
+    "iTransformer"
+  ],
+  "causality": "all tests passed"
+}

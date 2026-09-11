@@ -1,0 +1,15 @@
+{
+  "violations": 0,
+  "forecast_records": 480960,
+  "forecast_origins_per_series_model": 334,
+  "event_order": "(available_at,rank_available) < (decision_time,2)",
+  "test_reports": [
+    "preflight_tests.xml",
+    "postflight_tests.xml"
+  ],
+  "scalers_used": false,
+  "future_actuals_used": false,
+  "attachment3_used": false,
+  "attachment4_used": false,
+  "result_templates_used": false
+}

@@ -1,0 +1,157 @@
+[
+  {
+    "path": "artifacts\\baselines\\canonical_actuals.csv",
+    "bytes": 12434403,
+    "sha256": "65db708cdf37cf8266561a2a78bb1da032bb60e2736f1f0849f45143ffb9f8ed"
+  },
+  {
+    "path": "artifacts\\baselines\\environment.json",
+    "bytes": 1437,
+    "sha256": "69a40bc52720621f8875767b22427d04889a74c32fa54d7562f994b992ee549c"
+  },
+  {
+    "path": "artifacts\\baselines\\lineage.csv",
+    "bytes": 754050,
+    "sha256": "20d3263c3ed93bdae953e584307e39c03ff831792fc425fdcc90a2436a123e86"
+  },
+  {
+    "path": "artifacts\\baselines\\predictions.csv",
+    "bytes": 73787016,
+    "sha256": "d5252772478f98d6a0516a28093e161052342b3d091158a5b3f3fc46257a4a20"
+  },
+  {
+    "path": "artifacts\\baselines\\runtime.csv",
+    "bytes": 146020,
+    "sha256": "bef3c08a4ddaf8d712aa761ec9ca0013e388f68f6d99e41e4661cca381ef854b"
+  },
+  {
+    "path": "artifacts\\metrics\\metric_definitions.json",
+    "bytes": 636,
+    "sha256": "91053b3cc4826ba8dd9253749e75a83813ea986c695e1cf59d49b0e6b7ac3be6"
+  },
+  {
+    "path": "artifacts\\metrics\\metrics_daily.csv",
+    "bytes": 350474,
+    "sha256": "ddb70d6231e4365f68bd8ab31f749df920613e29b8790745abc26f017f4b17a2"
+  },
+  {
+    "path": "artifacts\\metrics\\metrics_exact_31_days.csv",
+    "bytes": 1012,
+    "sha256": "17846c0d54df10a8e6261d6b29a61755544c2ca70e072bf2efc534a9d91f0894"
+  },
+  {
+    "path": "artifacts\\metrics\\metrics_global.csv",
+    "bytes": 1040,
+    "sha256": "c236b1fc783a597dd2ee4921ac226d924c280389fd66b1309a59bd7bf9945583"
+  },
+  {
+    "path": "artifacts\\metrics\\metrics_history_size.csv",
+    "bytes": 4301,
+    "sha256": "7d3d8248a47116a5dc0c3c1374eeaaf2c057463f5b1930d5a4bd5185b21cb92d"
+  },
+  {
+    "path": "artifacts\\metrics\\metrics_horizon.csv",
+    "bytes": 120279,
+    "sha256": "4d4d0de2753e2d20633de594bf785820c027d866dc1139fa6bfa29ebcad2e757"
+  },
+  {
+    "path": "artifacts\\metrics\\metrics_monthly.csv",
+    "bytes": 11111,
+    "sha256": "99dded71778a2502db38848c9038ebfc38a23659f8ace32d6d5cc7e0efc2db3e"
+  },
+  {
+    "path": "artifacts\\figures\\baseline_overview.png",
+    "bytes": 60332,
+    "sha256": "464fa62fe7c749e8709dafa1be711c0bdb2bfc345dafcf05c22634a155a0cd8a"
+  },
+  {
+    "path": "artifacts\\figures\\load_actual_vs_b1.png",
+    "bytes": 143529,
+    "sha256": "2b32cf32251be84802c93615f52f639df4e2e0d3334d12fe9978333de9502d00"
+  },
+  {
+    "path": "artifacts\\figures\\load_actual_vs_b2.png",
+    "bytes": 141421,
+    "sha256": "430a704b7f818aa02da1801fc8f11bf4c09fc040823f352c5cb4c99d43ef35d0"
+  },
+  {
+    "path": "artifacts\\figures\\load_actual_vs_b3.png",
+    "bytes": 113615,
+    "sha256": "112a09bfb10ca07761b3252977c5e858c69f3a0775a41113f8915057c954c302"
+  },
+  {
+    "path": "artifacts\\figures\\load_horizon_mae.png",
+    "bytes": 131287,
+    "sha256": "81fa08ec82e2102969abc626885bd689b3fec5bd68893cab87129e863b625e7e"
+  },
+  {
+    "path": "artifacts\\figures\\load_monthly_mae.png",
+    "bytes": 97067,
+    "sha256": "16f628978ec04fa3424627b43d281c937316ddd28cad7d94fe2e10a1b13f3f8f"
+  },
+  {
+    "path": "artifacts\\figures\\mae_vs_available_history_days.png",
+    "bytes": 345976,
+    "sha256": "145ecc1f00c683747c650710466166f32b520ce2c926436cc3764e9649188b44"
+  },
+  {
+    "path": "artifacts\\figures\\pv_actual_vs_b1.png",
+    "bytes": 82316,
+    "sha256": "8c7dabcbd38845234c7582b788a3842f7c87e2d85437e83bc20ccd88e3a12753"
+  },
+  {
+    "path": "artifacts\\figures\\pv_actual_vs_b2.png",
+    "bytes": 84527,
+    "sha256": "81f9167641e286944123215b86584c2047a0efda144b6dea7a3652469e9d6037"
+  },
+  {
+    "path": "artifacts\\figures\\pv_actual_vs_b3.png",
+    "bytes": 80919,
+    "sha256": "5d5aabd129c3c3ad7b9c47ead094427412ba07e0df6f237f668ea660de3ffca2"
+  },
+  {
+    "path": "artifacts\\figures\\pv_horizon_mae.png",
+    "bytes": 82717,
+    "sha256": "6d36272336f10673103b87d371c0eebe75037681421a48811ae1ee273b466aa6"
+  },
+  {
+    "path": "artifacts\\figures\\pv_monthly_mae.png",
+    "bytes": 88286,
+    "sha256": "b318be8afc8ffd45069b7718dbd4b777582e889d772102ca173021f6c6373bdf"
+  },
+  {
+    "path": "artifacts\\leakage_audit\\causality_summary.json",
+    "bytes": 407,
+    "sha256": "f1729a8f2f57fbca43ff79f0432b2edeeb709429d15fe1f13e60d594ebd99733"
+  },
+  {
+    "path": "artifacts\\leakage_audit\\postflight_tests.txt",
+    "bytes": 103,
+    "sha256": "23e78ba7d8c3e43a5cc0510c5423c6272e9d8b362a67368bee15dfa3ec1bd9f9"
+  },
+  {
+    "path": "artifacts\\leakage_audit\\postflight_tests.xml",
+    "bytes": 2135,
+    "sha256": "b9baabbdddc362d4358d7aabd266a1df8da4021e74ca2e952555fdd446dd3b0b"
+  },
+  {
+    "path": "artifacts\\leakage_audit\\preflight_tests.txt",
+    "bytes": 103,
+    "sha256": "81b00475049a4eb254d394ce3ab161e97342e3d35be6297f0cc45932fe924f8c"
+  },
+  {
+    "path": "artifacts\\leakage_audit\\preflight_tests.xml",
+    "bytes": 5560,
+    "sha256": "04e7a6f1abaf7584719b5a3801b1bfe5c36fb56308e0a76619c4ca180e978252"
+  },
+  {
+    "path": "BASELINE_REPORT.md",
+    "bytes": 10737,
+    "sha256": "f3d69407c76b28f98365be07b02817957de12e9d1462f56fd036006361232bb5"
+  },
+  {
+    "path": "TIME_PROTOCOL.md",
+    "bytes": 2476,
+    "sha256": "102a5a65f776d480c542f61e2cba0d1ad27f864c850799210b87d8095f000a51"
+  }
+]

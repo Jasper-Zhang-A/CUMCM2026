@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "tests_passed": 59,
+  "causality_violations": 0,
+  "forecast_rows": 480960,
+  "metric_groups_independently_checked": 1600,
+  "canonical_rows": 105120,
+  "figures_visually_reviewed": 12,
+  "input_preserved": true,
+  "predictor_and_metric_code_unchanged_since_tests": true,
+  "final_verification_seconds": 9.384513199998764
+}

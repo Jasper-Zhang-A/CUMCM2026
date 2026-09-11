@@ -1,0 +1,4 @@
+{
+  "series_improved_seed2026": [],
+  "rule": "global all-day MAE strictly better than fixed strong baseline; structure remains January frozen"
+}

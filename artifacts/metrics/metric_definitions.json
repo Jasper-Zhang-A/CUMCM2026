@@ -1,0 +1,10 @@
+{
+  "MAE": "mean(abs(pred_power_kw-target_power_kw))",
+  "RMSE": "sqrt(mean((pred_power_kw-target_power_kw)^2))",
+  "nMAE": "MAE / mean(abs(target_power_kw)) within the same group; NaN if denominator=0",
+  "daylight": "PV target_power_kw>0, settlement only, not available to models",
+  "aggregation": "All slots pooled, no unweighted average of monthly metrics",
+  "horizon_step": "target_slot+1; h1=[00:00,00:10), h144=[23:50,24:00)",
+  "history_days": "complete available days, not necessarily days used by a specific model",
+  "test_selection": "No parameter or model selected by test metrics; descriptive comparison only"
+}

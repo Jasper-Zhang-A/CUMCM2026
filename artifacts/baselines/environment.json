@@ -1,0 +1,29 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "openpyxl": "3.1.5",
+    "pytest": "9.1.1",
+    "matplotlib": "3.11.1"
+  },
+  "seed": 2026,
+  "pytorch": "not used",
+  "TSLib_commit": "not used",
+  "CUDA_GPU": "not used (CPU deterministic baselines)",
+  "trainable_neural_parameters": 0,
+  "scaler": "none",
+  "input_sha256": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72",
+  "config_sha256": "f549c44d1298bb9fdebaf2de0b248e04ff2e35d2cd977c5c2d3df1710a01c65a",
+  "code_sha256": {
+    "seasonal.py": "47daea1e9963c58597ca8c182247e627fb3ed1ce3a5b0a1fc0d8a9e9b72ea45c",
+    "run_baselines.py": "fa938517060b438ef1f9b0d3f00eec885b1a459dc44d0bbca501bbcd95ec99d0",
+    "evaluate_all.py": "d280b3de0240d45cbd3cb0c71b126960a26d589c9803c3a38b02eef84102877e",
+    "build_baseline_report.py": "fca2bcb7710f1011ba9ded25d34bbb51bb94fdd5b8da8047d13ee17b2ba99c10",
+    "test_event_causality.py": "1c8aba589814612bf5f2ba7683c86e233b0b75e4ec34c54299aa4c8b3f4d6595",
+    "test_prediction_artifacts.py": "9156f133f01b723aa3603ab7af8d0e2b9af2076579e3ba64cc1e9a547bbec0fb"
+  },
+  "elapsed_seconds_before_report": 127.9880073999957,
+  "report_recovery": "Initial report-builder syntax error fixed; existing forecasts and metrics preserved and independently verified."
+}
