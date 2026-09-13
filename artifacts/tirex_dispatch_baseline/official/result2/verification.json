@@ -1,0 +1,27 @@
+{
+  "result_id": "result2",
+  "passed": true,
+  "days": 365,
+  "first_day": "2025-01-01",
+  "last_day": "2025-12-31",
+  "tolerance_kwh": 1e-05,
+  "max_balance_error_kwh": 4.547473508864641e-13,
+  "max_storage_error_kwh": 1.1368683772161603e-13,
+  "max_continuity_error_kwh": 0.0,
+  "max_simultaneous_kwh": 0.0,
+  "max_version_error_kwh": 0.0,
+  "max_ledger_error_cny": 0.0,
+  "max_event_error_kwh": 2.7291502391335598e-11,
+  "information_audit": {
+    "decisions": 1460,
+    "forecast_issue_checks": 1336,
+    "historical_day_checks": 10132,
+    "weight_checks": 1460,
+    "reveal_checks": 1460,
+    "solver_checks": 2920
+  },
+  "total_cost_all_days": 16672022.214820776,
+  "independent_of_optimizer_objective": true,
+  "january_matches_reference": true,
+  "forecast_truth_alignment_passed": true
+}

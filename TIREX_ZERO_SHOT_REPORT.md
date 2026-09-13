@@ -2,21 +2,31 @@
 
 ## 结果
 
-本流程以纯推理方式运行 TiRex，本地训练步数和微调步数均为 0。TiRex historical-only baseline 生成 577,152 条十分钟预测，覆盖负载、光伏实际功率、波动电价，以及每日 00:00、06:00、12:00、18:00 四个决策时刻。
+本流程以纯推理方式运行 TiRex，本地训练步数和微调步数均为 0。TiRex historical-only baseline 生成 1,154,304 条十分钟预测，覆盖负载、光伏实际功率、波动电价，以及每日 00:00、06:00、12:00、18:00 四个决策时刻。
 
 | 范围 | 模型 | 目标 | 分辨率 | n | MAE | RMSE | WAPE (%) |
 |---|---|---|---|---:|---:|---:|---:|
-| Q2_day_ahead_24h | TiRex_historical_only | A2_LOAD | 10min | 48096 | 669.2722 | 993.7321 | 14.4965 |
-| Q2_day_ahead_24h | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 196.8471 | 355.2581 | 8.2749 |
-| Q3_TiRex_historical_only_latest_path | TiRex_historical_only | A2_LOAD | 10min | 48096 | 288.9375 | 418.3866 | 6.2584 |
-| Q3_TiRex_historical_only_latest_path | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 195.3240 | 357.6949 | 8.2108 |
-| Q4-2_day_ahead_24h | TiRex_historical_only | A2_LOAD | 10min | 48096 | 669.2722 | 993.7321 | 14.4965 |
-| Q4-2_day_ahead_24h | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 196.8471 | 355.2581 | 8.2749 |
-| Q4-2_day_ahead_24h | TiRex_historical_only | A4_PRICE | 10min | 48096 | 0.0913 | 0.1203 | 12.0513 |
-| Q4-3_TiRex_latest_path | TiRex_historical_only | A2_LOAD | 10min | 48096 | 288.9375 | 418.3866 | 6.2584 |
-| Q4-3_TiRex_latest_path | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 195.3240 | 357.6949 | 8.2108 |
-| Q4-3_TiRex_latest_path | TiRex_historical_only | A4_PRICE | 10min | 48096 | 0.0632 | 0.0840 | 8.3484 |
-| Q3_official_vs_TiRex_latest_path | TiRex_historical_only | A2_PV_ACTUAL | hourly_endpoint_proxy | 8016 | 204.4583 | 367.3847 | 8.5984 |
+| Q2_day_ahead_24h | CycleBaseline_plus_TiRexResidual | A2_LOAD | 10min | 48096 | 731.8789 | 933.3509 | 15.8526 |
+| Q2_day_ahead_24h | CycleBaseline_plus_TiRexResidual | A2_PV_ACTUAL | 10min | 48096 | 155.2294 | 308.7891 | 6.5254 |
+| Q2_day_ahead_24h | TiRex_historical_only | A2_LOAD | 10min | 48096 | 669.0717 | 993.4236 | 14.4922 |
+| Q2_day_ahead_24h | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 196.9825 | 355.3917 | 8.2806 |
+| Q3_TiRex_historical_only_latest_path | CycleBaseline_plus_TiRexResidual | A2_LOAD | 10min | 48096 | 582.3151 | 744.6610 | 12.6130 |
+| Q3_TiRex_historical_only_latest_path | CycleBaseline_plus_TiRexResidual | A2_PV_ACTUAL | 10min | 48096 | 146.1631 | 289.1871 | 6.1443 |
+| Q3_TiRex_historical_only_latest_path | TiRex_historical_only | A2_LOAD | 10min | 48096 | 289.0961 | 418.5971 | 6.2619 |
+| Q3_TiRex_historical_only_latest_path | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 195.1492 | 357.3756 | 8.2035 |
+| Q4-2_day_ahead_24h | CycleBaseline_plus_TiRexResidual | A2_LOAD | 10min | 48096 | 731.8789 | 933.3509 | 15.8526 |
+| Q4-2_day_ahead_24h | CycleBaseline_plus_TiRexResidual | A2_PV_ACTUAL | 10min | 48096 | 155.2294 | 308.7891 | 6.5254 |
+| Q4-2_day_ahead_24h | CycleBaseline_plus_TiRexResidual | A4_PRICE | 10min | 48096 | 0.0429 | 0.0602 | 5.6568 |
+| Q4-2_day_ahead_24h | TiRex_historical_only | A2_LOAD | 10min | 48096 | 669.0717 | 993.4236 | 14.4922 |
+| Q4-2_day_ahead_24h | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 196.9825 | 355.3917 | 8.2806 |
+| Q4-2_day_ahead_24h | TiRex_historical_only | A4_PRICE | 10min | 48096 | 0.0913 | 0.1202 | 12.0488 |
+| Q4-3_TiRex_latest_path | CycleBaseline_plus_TiRexResidual | A2_LOAD | 10min | 48096 | 582.3151 | 744.6610 | 12.6130 |
+| Q4-3_TiRex_latest_path | CycleBaseline_plus_TiRexResidual | A2_PV_ACTUAL | 10min | 48096 | 146.1631 | 289.1871 | 6.1443 |
+| Q4-3_TiRex_latest_path | CycleBaseline_plus_TiRexResidual | A4_PRICE | 10min | 48096 | 0.0427 | 0.0601 | 5.6372 |
+| Q4-3_TiRex_latest_path | TiRex_historical_only | A2_LOAD | 10min | 48096 | 289.0961 | 418.5971 | 6.2619 |
+| Q4-3_TiRex_latest_path | TiRex_historical_only | A2_PV_ACTUAL | 10min | 48096 | 195.1492 | 357.3756 | 8.2035 |
+| Q4-3_TiRex_latest_path | TiRex_historical_only | A4_PRICE | 10min | 48096 | 0.0632 | 0.0840 | 8.3478 |
+| Q3_official_vs_TiRex_latest_path | TiRex_historical_only | A2_PV_ACTUAL | hourly_endpoint_proxy | 8016 | 204.2664 | 367.0427 | 8.5903 |
 | Q3_official_vs_TiRex_latest_path | Official_Attachment3 | A2_PV_ACTUAL | hourly_endpoint_proxy | 8016 | 57.5078 | 132.3267 | 2.4185 |
 
 `Q3_official_vs_TiRex_latest_path` 在相同发布时刻、相同整点目标和相同代理真值上比较两个模型。附件 3 的整点光伏预报构成 Official Attachment3 baseline；历史实际光伏输入 TiRex 构成 TiRex historical-only baseline。

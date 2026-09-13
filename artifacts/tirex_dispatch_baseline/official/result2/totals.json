@@ -1,0 +1,10 @@
+{
+  "total_cost_cny": 14712196.318409331,
+  "emergency_kwh": 340471.53588337166,
+  "emergency_cost_cny": 1661189.9516632017,
+  "effective_purchase_cost_cny": 13051006.36674613,
+  "adjustment_fee_cny": 0.0,
+  "days": 334,
+  "initial_energy_kwh": 1694.0124768050082,
+  "final_energy_kwh": 1200.0
+}

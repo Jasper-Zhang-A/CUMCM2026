@@ -1,0 +1,57 @@
+{
+  "created_at_utc": "2026-09-12T08:26:31.892294+00:00",
+  "mode": "TiRex zero-shot inference plus causal cycle residual",
+  "training_steps": 0,
+  "finetuning_steps": 0,
+  "input": "Data/data_clean.csv",
+  "checkpoint": "HuggingFace/model.ckpt",
+  "parameters": {
+    "device": "cuda:0",
+    "batch_size": 256,
+    "context_length": 2048,
+    "prediction_length": 144,
+    "issue_minutes": [
+      0,
+      360,
+      720,
+      1080
+    ],
+    "quantile_postprocess": "baseline_nonnegative_projection; cycle residual restored then physical projection",
+    "cycle_config": {
+      "A2_LOAD": {
+        "period_steps": 144,
+        "n_lags": 7,
+        "alpha": 0.35
+      },
+      "A2_PV_ACTUAL": {
+        "period_steps": 144,
+        "n_lags": 7,
+        "alpha": 0.5
+      },
+      "A4_PRICE": {
+        "period_steps": 1008,
+        "n_lags": 4,
+        "alpha": 0.35
+      }
+    }
+  },
+  "semantics": {
+    "tirex_baseline": "historical_only",
+    "q3_official_baseline": "Attachment3",
+    "rolling_execution_path": "latest forecast supplies next 6 hours",
+    "load_revision_assumption": "online_actual_load_available_through_issue_time",
+    "price_prediction_role": "decision_price_forecast",
+    "price_actual_role": "realized_settlement_price"
+  },
+  "software": {
+    "python": "3.11.15",
+    "torch": "2.7.1+cu128",
+    "numpy": "2.1.2",
+    "pandas": "2.3.3"
+  },
+  "output": {
+    "forecast_rows": 1154304,
+    "evaluated_rows": 1153008,
+    "latest_path_rows_per_ten_minute_target": 48096
+  }
+}

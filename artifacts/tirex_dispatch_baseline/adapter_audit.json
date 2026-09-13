@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "reviewer": "independent sub-agent",
+  "a3_centers_exact_match": true,
+  "residual_scenarios_exact_match": true,
+  "causal_cutoff": "2025-03-22T12:00:00",
+  "future_actual_transform": "7*x+123",
+  "future_tirex_transform": "5*x+789",
+  "future_a3_transform": "9*x+456",
+  "current_scenarios_unchanged": true,
+  "current_forecast_positive_control_changes_scenarios": true
+}

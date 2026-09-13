@@ -1,0 +1,30 @@
+[
+  {
+    "case": "q2",
+    "days": 334,
+    "total_cost_cny": 141129520.82388523,
+    "emergency_kwh": 8738845.0373,
+    "max_soc_violation": 0.0
+  },
+  {
+    "case": "q3",
+    "days": 334,
+    "total_cost_cny": 143952695.98518714,
+    "emergency_kwh": 9230921.245781036,
+    "max_soc_violation": 0.0
+  },
+  {
+    "case": "q4-2",
+    "days": 334,
+    "total_cost_cny": 141045633.6845498,
+    "emergency_kwh": 8728697.799758725,
+    "max_soc_violation": 0.0
+  },
+  {
+    "case": "q4-3",
+    "days": 334,
+    "total_cost_cny": 143857962.30190158,
+    "emergency_kwh": 9219460.72485098,
+    "max_soc_violation": 0.0
+  }
+]

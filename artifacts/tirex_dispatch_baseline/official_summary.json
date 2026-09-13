@@ -1,0 +1,62 @@
+[
+  {
+    "total_cost_cny": 14712196.318409331,
+    "emergency_kwh": 340471.53588337166,
+    "emergency_cost_cny": 1661189.9516632017,
+    "effective_purchase_cost_cny": 13051006.36674613,
+    "adjustment_fee_cny": 0.0,
+    "days": 334,
+    "initial_energy_kwh": 1694.0124768050082,
+    "final_energy_kwh": 1200.0,
+    "case": "result2",
+    "pv_mode": "official",
+    "main_total_cost_cny": 13731811.493629172,
+    "baseline_minus_main_cny": 980384.8247801587,
+    "main_saving_pct": 6.663755727303656
+  },
+  {
+    "total_cost_cny": 13706671.481421772,
+    "emergency_kwh": 63099.56440472859,
+    "emergency_cost_cny": 250687.18598827813,
+    "effective_purchase_cost_cny": 12428161.968872529,
+    "adjustment_fee_cny": 1027822.3265609648,
+    "days": 334,
+    "initial_energy_kwh": 1819.0302061527702,
+    "final_energy_kwh": 1267.1984324545788,
+    "case": "result3",
+    "pv_mode": "official",
+    "main_total_cost_cny": 13135911.261254428,
+    "baseline_minus_main_cny": 570760.2201673444,
+    "main_saving_pct": 4.164105201915447
+  },
+  {
+    "total_cost_cny": 16081336.714729277,
+    "emergency_kwh": 359424.95303515147,
+    "emergency_cost_cny": 1867791.3637547626,
+    "effective_purchase_cost_cny": 14213545.350974515,
+    "adjustment_fee_cny": 0.0,
+    "days": 334,
+    "initial_energy_kwh": 1689.27827517826,
+    "final_energy_kwh": 1200.0,
+    "case": "result4-2",
+    "pv_mode": "official",
+    "main_total_cost_cny": 14504409.39142225,
+    "baseline_minus_main_cny": 1576927.323307028,
+    "main_saving_pct": 9.805946802063303
+  },
+  {
+    "total_cost_cny": 14867834.018434593,
+    "emergency_kwh": 80583.20934256603,
+    "emergency_cost_cny": 357514.4384020234,
+    "effective_purchase_cost_cny": 13234394.599040864,
+    "adjustment_fee_cny": 1275924.9809917058,
+    "days": 334,
+    "initial_energy_kwh": 1856.2355884539909,
+    "final_energy_kwh": 1257.6348952248102,
+    "case": "result4-3",
+    "pv_mode": "official",
+    "main_total_cost_cny": 13892348.754858922,
+    "baseline_minus_main_cny": 975485.2635756712,
+    "main_saving_pct": 6.561044886337641
+  }
+]

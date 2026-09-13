@@ -1,0 +1,13 @@
+# Full forecasts and detailed result artifacts stay local.
+/artifacts/**/forecasts.csv.gz
+/result*.xlsx
+/artifacts/dispatch/*.xlsx
+/artifacts/dispatch/*_audit.csv
+/artifacts/dispatch/*_emergency.csv
+/artifacts/tirex_dispatch_baseline/official/*/trace.npz
+/artifacts/tirex_dispatch_baseline/official/*/metadata.json
+/artifacts/tirex_dispatch_baseline/official/*/daily.json
+
+# Python runtime caches.
+__pycache__/
+*.py[cod]

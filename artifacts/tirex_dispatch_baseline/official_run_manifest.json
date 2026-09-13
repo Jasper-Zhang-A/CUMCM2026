@@ -1,0 +1,18 @@
+{
+  "main_root": "/mnt/c/Users/jaspe/Desktop/CUMCM",
+  "forecast_model": "TiRex_historical_only",
+  "pv_mode": "official",
+  "days": 365,
+  "forecast_sha256": "acff025767874bf62ebda51a4e3c3d5b19e236445f6aa78e35f4b0d519c9ae93",
+  "input_sha256": "89d65b8c047b6738d1b8db8f070bf73ecad92cad12de9341efb0c1fa5577891e",
+  "reference_source_sha256": {
+    "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/forecasting.py": "004c44067baf70e06b158945e998734115f3980be8d4fcbbfc966853927aa7d5",
+    "src/optimization.py": "8f26dcb40fa060fc07a8d9e3f475ec36f0654e58c57c115cbbf26304214c2b3d",
+    "src/reporting.py": "d59d938d4db6c82552bc42febbc652a56c1776ea082908742751a65bfd3d0494",
+    "src/results.py": "d354abd2b306cbbcc7b82bcba8d7df2c5963c15422707be0fff0541126c04b6a",
+    "src/simulation.py": "c81b9129a49de051277d49010d093fc1738ae97548fb241ee785627b728a61d5",
+    "src/verification.py": "b10254451ca79f5715a5d55f7697dc46f7cbe7850b30bf8453ca7543140c6339"
+  },
+  "runner_sha256": "f2c7641413d6158e79182bb99422c91441e30fbc0c94ec636f233e421696732f"
+}

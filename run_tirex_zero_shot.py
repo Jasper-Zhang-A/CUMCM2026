@@ -35,6 +35,125 @@ ASSUMPTIONS = {
     "A4_PRICE": "future_price_unknown; actual_price_used_only_for_settlement_evaluation",
 }
 
+# Ten-minute sampling implies 144 samples/day and 1008 samples/week.  The
+# cycle/residual helpers below intentionally operate on the timestamp index so
+# daylight/date irregularities cannot leak future rows into a template.
+CYCLE_PERIODS = {"daily": 144, "weekly": 1008}
+
+
+def cycle_template(
+    series: pd.Series,
+    issue: pd.Timestamp,
+    horizon: int = PREDICTION_LENGTH,
+    period_steps: int = 144,
+    n_lags: int = 1,
+    _position: dict[pd.Timestamp, int] | None = None,
+) -> np.ndarray:
+    """Return a causal same-phase template for ``issue``.
+
+    For each horizon timestamp only values strictly before/equal to the issue
+    are used (lags of one or more complete cycles).  Missing lags are ignored;
+    this makes the function robust to short warm-up windows while preserving a
+    strict no-future-data guarantee.
+    """
+    idx = series.index
+    vals = series.to_numpy(dtype=float)
+    # Positional lookup is exact because the attachments are regular 10-minute
+    # data.  A dictionary avoids nearest-neighbour matches across a gap.
+    pos = _position if _position is not None else {t: i for i, t in enumerate(idx)}
+    issue = pd.Timestamp(issue)
+    out = np.full(horizon, np.nan, dtype=float)
+    for h in range(1, horizon + 1):
+        t = issue + pd.Timedelta(minutes=10 * h)
+        samples = []
+        for lag in range(1, n_lags + 1):
+            ref = t - pd.Timedelta(minutes=10 * period_steps * lag)
+            # Historical observations at ``issue`` are allowed; future rows
+            # (including the target itself) are never eligible.
+            if ref <= issue and ref in pos:
+                samples.append(vals[pos[ref]])
+        if samples:
+            out[h - 1] = float(np.mean(samples))
+    # Causal fallback for a missing template (e.g. first cycle): use the most
+    # recent observed value, still restricted to issue_time.
+    if np.isnan(out).any():
+        hist = vals[idx <= issue]
+        fallback = float(hist[-1]) if len(hist) else 0.0
+        out[np.isnan(out)] = fallback
+    return out
+
+
+def causal_residual_series(
+    series: pd.Series, period_steps: int = 144, n_lags: int = 1
+) -> pd.Series:
+    """Construct y_t - causal_cycle_template(t) using past cycles only."""
+    idx = series.index
+    vals = series.to_numpy(dtype=float)
+    pos = {t: i for i, t in enumerate(idx)}
+    residual = np.full(len(vals), np.nan, dtype=float)
+    for i, t in enumerate(idx):
+        samples = []
+        for lag in range(1, n_lags + 1):
+            ref = t - pd.Timedelta(minutes=10 * period_steps * lag)
+            if ref in pos and ref < t:
+                samples.append(vals[pos[ref]])
+        if samples:
+            residual[i] = vals[i] - float(np.mean(samples))
+    return pd.Series(residual, index=idx, name="residual").dropna()
+
+
+def cycle_residual_forecast(
+    model: TiRexZero,
+    series: pd.Series,
+    issues: pd.DatetimeIndex,
+    *,
+    period_steps: int = 144,
+    n_lags: int = 1,
+    alpha: float = 1.0,
+    batch_size: int = 256,
+    nonnegative: bool = True,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Forecast ``cycle + alpha * TiRex(residual)``.
+
+    Returns point medians and repaired quantiles.  Residuals are intentionally
+    unconstrained (negative values are retained); optional non-negativity is
+    applied only after restoring to the original target scale.
+    """
+    residual = causal_residual_series(series, period_steps, n_lags)
+    position = {t: i for i, t in enumerate(series.index)}
+    context_length = int(getattr(getattr(model, "config", None), "train_ctx_len", CONTEXT_LENGTH) or CONTEXT_LENGTH)
+    contexts = []
+    templates = []
+    for issue in issues:
+        templates.append(
+            cycle_template(
+                series,
+                issue,
+                period_steps=period_steps,
+                n_lags=n_lags,
+                _position=position,
+            )
+        )
+        hist = residual.loc[residual.index <= pd.Timestamp(issue)].to_numpy(dtype=np.float32)
+        if len(hist) < context_length:
+            # This occurs only during causal warm-up; left-pad with the oldest
+            # available residual rather than introducing future observations.
+            pad = np.repeat(hist[:1] if len(hist) else 0.0, context_length - len(hist))
+            hist = np.concatenate([pad, hist])
+        contexts.append(hist[-context_length:])
+    raw_q, _ = model.forecast(
+        np.asarray(contexts, dtype=np.float32),
+        prediction_length=PREDICTION_LENGTH,
+        batch_size=batch_size,
+        output_type="numpy",
+        output_device="cpu",
+    )
+    corrected = np.asarray(templates)[:, :, None] + float(alpha) * raw_q
+    corrected = np.sort(corrected, axis=2)
+    if nonnegative:
+        corrected = np.maximum(corrected, 0.0)
+    return corrected[:, :, 4], corrected
+
 
 def load_data(path: Path) -> pd.DataFrame:
     return pd.read_csv(
@@ -51,13 +170,13 @@ def prepare_series(data: pd.DataFrame, dataset_id: str) -> pd.Series:
     return rows.sort_values("interval_end").set_index("interval_end")["value"]
 
 
-def make_contexts(series: pd.Series, issues: pd.DatetimeIndex) -> np.ndarray:
+def make_contexts(series: pd.Series, issues: pd.DatetimeIndex, context_length: int = CONTEXT_LENGTH) -> np.ndarray:
     times = series.index.to_numpy()
     values = series.to_numpy(dtype=np.float32)
     return np.stack(
         [
             values[
-                times.searchsorted(issue.to_datetime64(), side="right") - CONTEXT_LENGTH :
+                times.searchsorted(issue.to_datetime64(), side="right") - context_length :
                 times.searchsorted(issue.to_datetime64(), side="right")
             ]
             for issue in issues
@@ -67,7 +186,10 @@ def make_contexts(series: pd.Series, issues: pd.DatetimeIndex) -> np.ndarray:
 
 def forecast_all(model: TiRexZero, data: pd.DataFrame, issues: pd.DatetimeIndex, batch_size: int) -> pd.DataFrame:
     series = {dataset_id: prepare_series(data, dataset_id) for dataset_id in TARGETS}
-    contexts = np.concatenate([make_contexts(series[dataset_id], issues) for dataset_id in TARGETS])
+    context_length = int(getattr(getattr(model, "config", None), "train_ctx_len", CONTEXT_LENGTH) or CONTEXT_LENGTH)
+    contexts = np.concatenate(
+        [make_contexts(series[dataset_id], issues, context_length) for dataset_id in TARGETS]
+    )
     raw_quantiles, _ = model.forecast(
         contexts,
         prediction_length=PREDICTION_LENGTH,
@@ -110,6 +232,74 @@ def forecast_all(model: TiRexZero, data: pd.DataFrame, issues: pd.DatetimeIndex,
             }
         )
         frame[Q_COLUMNS] = quantiles
+        frames.append(frame)
+    return pd.concat(frames, ignore_index=True)
+
+
+def forecast_cycle_enhanced(
+    model: TiRexZero,
+    data: pd.DataFrame,
+    issues: pd.DatetimeIndex,
+    batch_size: int = 256,
+    cycle_config: dict[str, dict[str, float | int]] | None = None,
+) -> pd.DataFrame:
+    """Generate cycle-template plus TiRex residual forecasts for each target.
+
+    ``cycle_config`` maps dataset id to ``period_steps`` (144 or 1008),
+    ``n_lags`` and residual weight ``alpha``.  Defaults use daily load/PV and
+    weekly prices.  The function returns the same schema as ``forecast_all``
+    with ``baseline_model='CycleBaseline_plus_TiRexResidual'``.
+    """
+    series = {dataset_id: prepare_series(data, dataset_id) for dataset_id in TARGETS}
+    default_cfg: dict[str, dict[str, float | int]] = {
+        "A2_LOAD": {"period_steps": 144, "n_lags": 7, "alpha": 0.35},
+        "A2_PV_ACTUAL": {"period_steps": 144, "n_lags": 7, "alpha": 0.50},
+        "A4_PRICE": {"period_steps": 1008, "n_lags": 4, "alpha": 0.35},
+    }
+    if cycle_config:
+        for key, cfg in cycle_config.items():
+            if key in default_cfg:
+                default_cfg[key].update(cfg)
+    frames: list[pd.DataFrame] = []
+    steps = np.arange(1, PREDICTION_LENGTH + 1)
+    for dataset_id, (metric, unit, actual_role) in TARGETS.items():
+        cfg = default_cfg[dataset_id]
+        point, quantiles = cycle_residual_forecast(
+            model,
+            series[dataset_id],
+            issues,
+            period_steps=int(cfg["period_steps"]),
+            n_lags=int(cfg["n_lags"]),
+            alpha=float(cfg["alpha"]),
+            batch_size=batch_size,
+            nonnegative=False,
+        )
+        # Physical bounds are applied only after restoration to original units.
+        if dataset_id in {"A2_LOAD", "A2_PV_ACTUAL", "A4_PRICE"}:
+            point = np.maximum(point, 0.0)
+            quantiles = np.maximum(quantiles, 0.0)
+        repeated_issues = np.repeat(issues.to_numpy(), PREDICTION_LENGTH)
+        valid_end = repeated_issues + np.tile(steps, len(issues)).astype("timedelta64[m]") * 10
+        frame = pd.DataFrame(
+            {
+                "baseline_model": "CycleBaseline_plus_TiRexResidual",
+                "target_dataset": dataset_id,
+                "target_metric": metric,
+                "unit": unit,
+                "decision_data_assumption": ASSUMPTIONS[dataset_id],
+                "issue_time": repeated_issues,
+                "decision_minute": pd.DatetimeIndex(repeated_issues).hour * 60,
+                "horizon_step": np.tile(steps, len(issues)),
+                "lead_minutes": np.tile(steps, len(issues)) * 10,
+                "valid_interval_start": valid_end - np.timedelta64(10, "m"),
+                "valid_interval_end": valid_end,
+                "prediction_role": PREDICTION_ROLES[dataset_id],
+                "actual_role": actual_role,
+                "actual": series[dataset_id].reindex(pd.DatetimeIndex(valid_end)).to_numpy(),
+                "prediction": point.reshape(-1),
+            }
+        )
+        frame[Q_COLUMNS] = quantiles.reshape(-1, len(QUANTILES))
         frames.append(frame)
     return pd.concat(frames, ignore_index=True)
 
@@ -159,14 +349,14 @@ def revision_metrics(forecasts: pd.DataFrame) -> pd.DataFrame:
         include_lowest=True,
     )
     rows = []
-    for (target, decision, bucket), group in evaluated.groupby(
-        ["target_dataset", "decision_minute", "horizon_bucket"], observed=True
+    for (model_name, target, decision, bucket), group in evaluated.groupby(
+        ["baseline_model", "target_dataset", "decision_minute", "horizon_bucket"], observed=True
     ):
         rows.append(
             score_row(
                 group,
                 metric_scope="all_revision_forecasts_pooled",
-                baseline_model="TiRex_historical_only",
+                baseline_model=group["baseline_model"].iloc[0],
                 target_dataset=target,
                 target_metric=TARGETS[target][0],
                 unit=TARGETS[target][1],
@@ -225,12 +415,12 @@ def latest_path_metrics(forecasts: pd.DataFrame, aligned: pd.DataFrame) -> pd.Da
     latest = forecasts.dropna(subset=["actual"])
     latest = latest[latest["lead_minutes"].le(360)]
     rows = []
-    for target, group in latest.groupby("target_dataset"):
+    for (model_name,target), group in latest.groupby(["baseline_model","target_dataset"]):
         rows.append(
             score_row(
                 group,
                 path_scope="latest_available_6h_path",
-                baseline_model="TiRex_historical_only",
+                baseline_model=model_name,
                 target_dataset=target,
                 target_metric=TARGETS[target][0],
                 unit=TARGETS[target][1],
@@ -274,12 +464,12 @@ def question_metrics(forecasts: pd.DataFrame, aligned: pd.DataFrame) -> pd.DataF
     rows = []
     for scope, targets, mask in specs:
         selected = evaluated.loc[mask & evaluated["target_dataset"].isin(targets)]
-        for target, group in selected.groupby("target_dataset"):
+        for (model_name,target), group in selected.groupby(["baseline_model","target_dataset"]):
             rows.append(
                 score_row(
                     group,
                     question_scope=scope,
-                    baseline_model="TiRex_historical_only",
+                    baseline_model=model_name,
                     target_dataset=target,
                     target_metric=TARGETS[target][0],
                     unit=TARGETS[target][1],
@@ -388,10 +578,12 @@ def main() -> None:
     data = load_data(root / args.data)
     issues = pd.date_range("2025-02-01", "2025-12-31 18:00", freq="6h")
     model = TiRexZero.from_pretrained(str(root / args.checkpoint), device=args.device, backend="torch").eval()
-    forecasts = forecast_all(model, data, issues, args.batch_size)
-    aligned = align_a3(data, forecasts)
+    forecasts_raw = forecast_all(model, data, issues, args.batch_size)
+    forecasts_cycle = forecast_cycle_enhanced(model, data, issues, args.batch_size)
+    forecasts = pd.concat([forecasts_raw, forecasts_cycle], ignore_index=True)
+    aligned = align_a3(data, forecasts_raw)
     revision = revision_metrics(forecasts)
-    latest = latest_path_metrics(forecasts, aligned)
+    latest = latest_path_metrics(forecasts_raw, aligned)
     questions = question_metrics(forecasts, aligned)
     comparison = pv_comparison(aligned)
 
@@ -409,7 +601,7 @@ def main() -> None:
 
     metadata = {
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "mode": "TiRex zero-shot inference",
+        "mode": "TiRex zero-shot inference plus causal cycle residual",
         "training_steps": 0,
         "finetuning_steps": 0,
         "input": str(args.data),
@@ -420,7 +612,8 @@ def main() -> None:
             "context_length": CONTEXT_LENGTH,
             "prediction_length": PREDICTION_LENGTH,
             "issue_minutes": [0, 360, 720, 1080],
-            "quantile_postprocess": "nonnegative_projection_then_monotonic_rearrangement",
+            "quantile_postprocess": "baseline_nonnegative_projection; cycle residual restored then physical projection",
+            "cycle_config": {"A2_LOAD": {"period_steps": 144, "n_lags": 7, "alpha": 0.35}, "A2_PV_ACTUAL": {"period_steps": 144, "n_lags": 7, "alpha": 0.50}, "A4_PRICE": {"period_steps": 1008, "n_lags": 4, "alpha": 0.35}},
         },
         "semantics": {
             "tirex_baseline": "historical_only",
